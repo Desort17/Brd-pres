@@ -37,15 +37,18 @@ import {
   saveServerManifest,
 } from './utils/exactPhotoStore';
 import { musicBox, MELODIES, MelodyId } from './utils/musicBox';
+import exactPortrait1 from './assets/exact/portrait1.jpg';
+import exactPortrait2 from './assets/exact/portrait2.jpg';
+import exactTeddy from './assets/exact/teddy.jpg';
+import floralSanctuaryBg from './assets/images/romantic_floral_sanctuary_1790573138614.jpg';
 
 const DEFAULT_PHOTOS: CustomPhotosState = {
-  portrait1: '/src/assets/images/princess_portrait_film_1790573103528.jpg',
-  portrait2: '/src/assets/images/princess_portrait_cathedral_1790573115527.jpg',
-  teddy: '/src/assets/images/plush_bunny_teddy_1790573126585.jpg',
+  portrait1: exactPortrait1,
+  portrait2: exactPortrait2,
+  teddy: exactTeddy,
 };
 
-const FLORAL_SANCTUARY_BG =
-  '/src/assets/images/romantic_floral_sanctuary_1790573138614.jpg';
+const FLORAL_SANCTUARY_BG = floralSanctuaryBg;
 
 const BUNNY_HUG_MESSAGES = [
   'Your fluffy bunny teddy sends you the warmest, softest birthday squeeze!',
@@ -63,7 +66,7 @@ export default function App() {
   const [isPersonalizerOpen, setIsPersonalizerOpen] = useState<boolean>(false);
   const [teddyHugs, setTeddyHugs] = useState<number>(1);
   const [teddyHugActive, setTeddyHugActive] = useState<boolean>(false);
-  const [setupHidden, setSetupHidden] = useState<boolean>(false);
+  const [setupHidden, setSetupHidden] = useState<boolean>(true);
   const [skyTheme, setSkyTheme] = useState<'midnight' | 'twilight'>('midnight');
 
   const [lightboxItem, setLightboxItem] = useState<{
@@ -76,7 +79,7 @@ export default function App() {
 
   const [photos, setPhotos] = useState<CustomPhotosState>(DEFAULT_PHOTOS);
 
-  // Load saved exact original photos from Server (/public/exact-photos) and IndexedDB on mount
+  // Load saved exact original photos from Server or IndexedDB if overridden with data:image
   useEffect(() => {
     let active = true;
     async function initExactPhotos() {
@@ -87,12 +90,28 @@ export default function App() {
 
       if (!active) return;
 
+      const pickValid = (val: string | null | undefined, fallback: string) => {
+        if (!val) return fallback;
+        // Ignore old server-only paths when running on static hosts like GitHub Pages
+        if (val.startsWith('/exact-photos/') || val.startsWith('/src/')) {
+          return fallback;
+        }
+        return val;
+      };
+
       const resolved: CustomPhotosState = {
-        portrait1:
-          serverData?.portrait1 || localData.portrait1 || DEFAULT_PHOTOS.portrait1,
-        portrait2:
-          serverData?.portrait2 || localData.portrait2 || DEFAULT_PHOTOS.portrait2,
-        teddy: serverData?.teddy || localData.teddy || DEFAULT_PHOTOS.teddy,
+        portrait1: pickValid(
+          serverData?.portrait1 || localData.portrait1,
+          DEFAULT_PHOTOS.portrait1
+        ),
+        portrait2: pickValid(
+          serverData?.portrait2 || localData.portrait2,
+          DEFAULT_PHOTOS.portrait2
+        ),
+        teddy: pickValid(
+          serverData?.teddy || localData.teddy,
+          DEFAULT_PHOTOS.teddy
+        ),
       };
 
       setPhotos(resolved);

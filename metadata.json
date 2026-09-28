@@ -1,0 +1,6 @@
+{
+  "name": "Happy Birthday My Princess",
+  "description": "An interactive romantic birthday sanctuary featuring a runaway gift prompt, falling flower petals, voice-activated birthday cake candles, wax-sealed healing love letters, and a custom music box melody.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

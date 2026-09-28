@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #FFF9FB;
+    color: #2D1625;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+@keyframes flameFlicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 0.96;
+  }
+  25% {
+    transform: scale(1.05, 0.96) rotate(1.5deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.96, 1.06) rotate(-1.5deg);
+    opacity: 0.92;
+  }
+  75% {
+    transform: scale(1.03, 1.02) rotate(1deg);
+    opacity: 0.98;
+  }
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translateY(-22px) translateX(6px) scale(1.25);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-48px) translateX(-5px) scale(1.7);
+    opacity: 0;
+  }
+}
+
+.animate-flame {
+  animation: flameFlicker 1.6s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-smoke {
+  animation: smokeRise 2.2s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-flame,
+  .animate-smoke {
+    animation: none;
+  }
+}
+
